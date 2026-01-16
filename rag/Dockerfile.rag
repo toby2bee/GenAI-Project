@@ -1,0 +1,25 @@
+# Use an official Python runtime as a parent image
+FROM python
+
+# Set the working directory
+WORKDIR /rag
+
+# Expose the application on port 5002
+EXPOSE 5002
+
+# Define environment variable
+ENV FLASK_APP=rag.py
+
+# Install any needed packages specified in requirements.txt
+COPY requirements.txt /rag/
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the RAG files into the container
+COPY rag/rag.py /rag/
+COPY rag/knowledge_base.py /rag/
+
+# Copy the model file
+COPY llama-2-7b-chat.Q2_K.gguf /rag/
+
+# Run rag.py when the container launches
+CMD ["python", "rag.py"]
